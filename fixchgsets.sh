@@ -11,7 +11,7 @@ then
     cp scripts/3insert-student-caterpillar-wrb.json Changelogs/demo/3insert-student-caterpillar.json
 
     #fix naming of index in create-idxname-students.js
-    sed -i '' 's/ID-/IDX-/g' create-idxname-students.js
+    sed -i '' 's/ID-/IDX-/g' Changelogs/create-idxname-students.js
 fi
 
 if [[ $format = 'fm' ]]
