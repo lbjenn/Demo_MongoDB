@@ -1,0 +1,20 @@
+{
+    "databaseChangeLog": [
+        {
+          "changeSet": {
+              "id": "dml-the-caterpillar",
+              "author": "jennl",
+              "labels": "[jira-101],'version 1.0'",
+              "runWith": "mongosh",
+              "changes": [
+                {
+                    "mongo": {
+                        "dbms": "mongodb",
+                        "mongo": "db.students.insertOne( { name: \"The Caterpillar\", year: 3017, major: \"English\", address: { city: \"Mushroom Valley\", street: \"Funghi Ln.\", state:\"New York\"}}
+                        )"
+                    }
+                }]
+            }
+        }
+    ]    
+}

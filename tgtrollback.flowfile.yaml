@@ -1,0 +1,19 @@
+stages:
+
+  ## The first stage of actions
+  Rollback:
+    actions:
+      #
+      # Show current changes in database
+      #
+      - type: liquibase
+        command: history
+      - type: liquibase
+        command: validate
+      # Rollback change
+      - type: liquibase
+        command: rollback-one-changeset
+        cmdArgs: {changeSetId: "${CHANGESETID}", changeSetAuthor: "${AUTHOR}", changeSetPath: "${CHANGEPATH}", force: true, report-name: "MongoDB-tgtrollback.html"}
+      # Show change no longer in the database
+      - type: liquibase
+        command: history

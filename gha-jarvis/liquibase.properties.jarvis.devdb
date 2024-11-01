@@ -1,0 +1,64 @@
+####     _     _             _ _
+##      | |   (_)           (_) |
+##      | |    _  __ _ _   _ _| |__   __ _ ___  ___
+##      | |   | |/ _` | | | | | '_ \ / _` / __|/ _ \
+##      | |___| | (_| | |_| | | |_) | (_| \__ \  __/
+##      \_____/_|\__, |\__,_|_|_.__/ \__,_|___/\___|
+##                  | |
+##                  |_|
+##
+##      The liquibase.properties file stores properties which do not change often,
+##      such as database connection information. Properties stored here save time
+##      and reduce risk of mistyped command line arguments.
+##      Learn more: https://www.liquibase.org/documentation/config_properties.html
+####
+####
+##   Note about relative and absolute paths:
+##      The liquibase.properties file requires paths for some properties.
+##      The classpath is the path/to/resources (ex. src/main/resources).
+##      The changeLogFile path is relative to the classpath.
+##      The url H2 example below is relative to 'pwd' resource.
+####
+# Enter the path for your changelog file.
+changeLogFile=dbchangelog.json
+
+#### Enter the Target database 'url' information  ####
+## mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database.collection][?options]]
+url: mongodb://localhost:7542/devdb?authSource=admin
+
+# Enter the username for your Target database.
+#username: lbuser
+username: SpiderMan3
+
+# Enter the password for your Target database.
+#password: password
+password: Sillys911
+
+# Enter URL for the source database
+referenceUrl: mongodb://localhost:7542/devdb?authSource=admin
+
+# Enter the username for your source database
+#username: lbuser
+username: jarvis
+
+# Enter the password for your source database
+#referencePassword: password
+referencePassword: Sillys911
+
+#### Liquibase Pro Key Information ####
+# Learn more, contact support, or get or renew a Pro Key at https://www.liquibase.com/trial
+liquibase.licenseKey:ABwwGgQU4GoxjHBu5y7Kxsph1uYQb5ZvWa0CAgQA5jnfToLhYklBc1EOyzi7XNIO/646QMux2Cv+jIVWQ+W2IAJKSMuKUiFLegSgPE+21IZLoErPM7DsK3sAFbAPwhLAg69w4jRQDfcKwtSMUPi4zcwGJu6eZlzsEPBb3bj3kFS0JYGZaSb1KAdv3phXnSv/NU5OH3HZNP+erBsQKmfhIobUT7ZlXetYUm9jogjMKSzl+JUC6NU7Wc3CL/KzJ6JPQb1F12pTBLjD6Q9GEOeGYodhXr+YKxleVQp1lN6mfPHAsOUaEVSGSzx44OGL4Ydc7dq8mZjulhHKN5Kxr4UUYgVHzQTYBdkjlphDhnUviFZk24VUoxdR0gXDrFaKRdVuI/2Q1urkz9uEkakZ6tjiDg2nP0GD2SH8tySPw2P3YMqW9d4VYdSxqfzekscyCT0kYUSnSsxsroQxoNvFtwnURO4BlPO+Yg0SyCklddVOG/GAiUKGtwLwXqpgmmNot1FK0UMyZUNnr6yJCJHdv5WG6V1rTaTzZaCQ2f6w6rdIRo03BTHErYSHlIUGNe9hxqS+QbWwemSVmRc3Qho3EntCwyy1cTMouW6jsodhBI2Ew887J8FplTBm6EK7+cpb7gdR2vYoS3Pxz0+AzVGxKGZ30pu31cfXtAIEWByJ43FeadymxE9Vs/Jbr9AJHX6GsSSFbADTDV5h
+# Logging Configuration
+# logLevel controls the amount of logging information generated. If not set, the default logLevel is INFO.
+# Valid values, from least amount of logging to most, are:
+#   OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+# If you are having problems, setting the logLevel to DEBUG and re-running the command can be helpful.
+logLevel: DEBUG
+#liquibase.logFormat: JSON
+
+# The logFile property controls where logging messages are sent. If this is not set, then logging messages are
+# displayed on the console. If this is set, then messages will be sent to a file with the given name.
+logFile: logs/liquibase.log
+
+## enable reports version 4.26
+liquibase.reports.enabled=true

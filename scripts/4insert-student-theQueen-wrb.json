@@ -1,0 +1,27 @@
+{
+    "databaseChangeLog": [
+        {
+          "changeSet": {
+              "id": "dml-the-queenofhearts",
+              "author": "jennl",
+              "labels": "[jira-101],'version 1.0'",
+              "runWith": "mongosh",
+              "changes": [
+                {
+                    "mongo": {
+                        "dbms": "mongodb",
+                        "mongo": "db.students.insertOne( { name: \"The Queen of Hearts\", year: 2017, major: \"Philosophy\", address: { city: \"The Castle\", street: \"Palace Blvd.\", state:\"New York\"}}
+                        )"
+                    }
+                }],
+                "rollback": [
+                    {
+                      "mongo": {
+                        "mongo": "db.students.deleteOne({ name: { $eq: \"The Queen of Hearts\" } })"
+                      }
+                    }
+                  ]
+            }
+        }
+    ]    
+}

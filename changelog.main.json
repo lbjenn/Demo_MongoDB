@@ -1,0 +1,12 @@
+{
+    "databaseChangeLog":
+    [
+        {
+          "include": { "file": "Changelogs/changelog-release1-0.js" }
+        },
+        {
+          "includeAll": { "relativeToChangelogFile":true, "path":"Changelogs/demo", "errorIfMissingOrEmpty":"false" }
+        }
+    ]
+
+}

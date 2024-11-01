@@ -1,0 +1,8 @@
+*.html
+logs
+mongologs
+liquibase.mongosh.conf
+.DS_store
+actions-runner
+liquibase.properties
+formatted

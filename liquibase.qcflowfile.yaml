@@ -1,0 +1,27 @@
+##########           LIQUIBASE FLOWFILE                ##########
+##########  learn more http://docs.liquibase.com/flow  ##########
+
+stages:
+
+  ## The first stage of actions
+  Default:
+    actions:
+      #
+      # status for target changelog
+      #
+      - type: liquibase
+        command: status
+        cmdArgs: { verbose: true }
+      #
+      # Quality Checks for changelog for SEV=0
+      #
+      - type: liquibase
+        command: checks show
+        cmdArgs: { checks-scope: changelog, checks-settings-file: "liquibase.checks-settings.conf" }
+      #
+      # Quality Checks for changelog for SEV=0
+      #
+      - type: liquibase
+        command: checks run
+        cmdArgs: { checks-scope: changelog, checksoutput: ISSUES, reportsenabled: true, reportname: "checks_run_report.html" }
+   
