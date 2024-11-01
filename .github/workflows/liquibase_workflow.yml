@@ -1,0 +1,140 @@
+###
+### This sample pipeline is intended as a starting point for integration between Liquibase Pro and GitHub pipelines
+### Review and update prior to use
+###
+### Liquibase sales: https://www.liquibase.com/contact
+### Liquibase support: https://support.liquibase.com/knowledge
+### 
+
+###
+### Prior to running the following files must exist in repository:
+###
+### 1. liquibase.flowfile.yaml
+###    Liquibase flow file
+###    https://docs.liquibase.com/commands/flow/flow.html
+###
+### 2. liquibase.checks-settings.conf
+###    Liquibase policy checks configuration file
+###    https://docs.liquibase.com/liquibase-pro/policy-checks/home.html
+###
+### 3. changelog.main.xml
+###    Liquibase changelog file
+###    https://docs.liquibase.com/concepts/changelogs/home.html
+###
+
+###
+### GitHub Actions documentation: https://docs.github.com/en/actions
+###
+
+name: 1. Liquibase Workflow
+
+###
+### Pipelines can be triggered manually or via events
+###
+on:
+  workflow_dispatch:
+    inputs:
+      labels:
+        type: string
+        description: Label filters
+      policy-checks:
+        type: choice
+        description: Policy checks T/F
+        required: true
+        options:
+        - T
+        - F
+     # drift-detection:
+     #   type: choice
+     #   description: Drift detection T/F
+     #   required: true
+     #   options:
+     #   - T
+     #   - F
+      test-rollbacks:
+        type: choice
+        description: Test rollback scripts T/F
+        required: true
+        options:
+        - T
+        - F
+###
+### Set Liquibase environment variables
+###
+env:
+###
+### Prompts
+###
+    LB_LABELS: ${{ github.event.inputs.labels }}
+    LB_TEST_CHECKS: ${{ github.event.inputs.policy-checks }}
+    LB_TEST_DRIFT: 'F' ## ${{ github.event.inputs.drift-detection }} Database inspection is not available for MongoDB as of 4.30.0
+    LB_TEST_ROLLBACKS: ${{ github.event.inputs.test-rollbacks }}
+###
+### Liquibase specific
+###
+    LB_BASE_DIR: ./
+    LB_ENVIRONMENT: github.event.inputs.db
+    LB_TAG: ${{ github.run_number }}
+    LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog.main.json
+    LIQUIBASE_COMMAND_CHECKS_RUN_CHECKS_OUTPUT: issues
+    LIQUIBASE_DBCLHISTORY_ENABLED: false
+    LIQUIBASE_LOG_FILE: liquibase.dev.log.json
+#    LIQUIBASE_LOG_FORMAT: json_pretty
+    LIQUIBASE_LOG_LEVEL: INFO
+    LIQUIBASE_MIRROR_CONSOLE_MESSAGES_TO_LOG: false
+    LIQUIBASE_SHOW_BANNER: false
+###
+### These values should be pulled from GitHub secrets
+### Secrets should include LIQUIBASE_COMMAND_URL, LIQUIBASE_COMMAND_USERNAME, LIQUIBASE_COMMAND_PASSWORD, LIQUIBASE_LICENSE_KEY
+###
+    LIQUIBASE_COMMAND_USERNAME: ${{ secrets.LIQUIBASE_COMMAND_USERNAME}}
+    LIQUIBASE_COMMAND_PASSWORD: ${{ secrets.LIQUIBASE_COMMAND_PASSWORD}}
+    LIQUIBASE_COMMAND_URL: ${{ secrets[format('LIQUIBASE_{0}_URL', github.event.inputs.db)] }}
+    LIQUIBASE_LICENSE_KEY: ${{ secrets.LIQUIBASE_LICENSE }}
+    AWS_REGION: us-east-1
+
+
+jobs:
+  liquibase-workflow:
+###
+### Can also be trigged by push
+###
+  # push:
+  #   branches: [ main ]
+  #   paths:
+  #     - '**.json'
+  #     - Changesets/**
+  #     - Changesets/demo/**
+  
+###
+### Update agent location
+###
+    runs-on: ubuntu-latest
+
+###
+### Checkout repository
+###
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.LIQUIBASE_GITHUB_TOKEN }}
+###
+### Run the Liquibase flowfile
+### Liquibase should be installed where your agents run or invoked via Docker
+###
+    - name: Running Liquibase
+#      run: liquibase flow --flow-file=liquibase.flowfile.yaml
+      run: docker run --env LIQUIBASE_SHOW_BANNER --env LIQUIBASE_DBCLHISTORY_ENABLED --env LIQUIBASE_COMMAND_USERNAME --env LIQUIBASE_COMMAND_PASSWORD --env LIQUIBASE_COMMAND_URL --env LIQUIBASE_LICENSE_KEY --env LIQUIBASE_COMMAND_CHANGELOG_FILE --env LIQUIBASE_COMMAND_CHECKS_RUN_CHECKS_OUTPUT --env LIQUIBASE_LOG_FILE --env LIQUIBASE_LOG_FORMAT --env LIQUIBASE_LOG_LEVEL --env AWS_REGION --env --AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY --env LIQUIBASE_MIRROR_CONSOLE_MESSAGES_TO_LOG --env LB_TAG --env LB_BASE_DIR --env LB_ENVIRONMENT --env LB_LABELS --env LB_TEST_DRIFT --env LB_TEST_CHECKS --env LB_TEST_ROLLBACKS --rm -v ${{ github.workspace }}:/liquibase/changelog -v ${{ github.workspace }}/lib:/liquibase/lib liquibase/liquibase:4.29.2 --name liquibase/liquibase:latest flow --flow-file=liquibase.flowfile.yaml
+      
+###
+### Update artifactory
+###
+    - name: Updating artifactory
+      if: success() || failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Artifacts-${{ env.LB_ENVIRONMENT }}.${{ github.run_number }}
+        path: |
+          **/*.log
+          **/*.html
