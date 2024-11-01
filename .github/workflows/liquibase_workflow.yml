@@ -34,6 +34,13 @@ name: 1. Liquibase Workflow
 on:
   workflow_dispatch:
     inputs:
+      db:
+        type: choice
+        required: true
+        options:
+        - DEVDB
+        - TESTDB
+        - PRODDB
       labels:
         type: string
         description: Label filters
