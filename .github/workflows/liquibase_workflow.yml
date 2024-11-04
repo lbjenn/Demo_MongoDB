@@ -79,7 +79,7 @@ env:
 ###
 ### Liquibase specific
 ###
-    LB_BASE_DIR: ./
+    LB_BASE_DIR: /liquibase/changelog
     LB_ENVIRONMENT: github.event.inputs.db
     LB_TAG: ${{ github.run_number }}
     LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog.main.json
